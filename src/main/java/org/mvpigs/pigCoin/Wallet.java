@@ -3,6 +3,7 @@ package org.mvpigs.pigCoin;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.TreeMap;
 
 public class Wallet {
     private PublicKey address;
@@ -10,6 +11,8 @@ public class Wallet {
     private double totalInput = 0.0d;
     private double totalOutput = 0.0d;
     private double balance = 0.0d;
+    private TreeMap<Integer, Transaction> loadInputTransactions = new TreeMap();
+    private TreeMap<Integer, Transaction> loadOutputTransactions = new TreeMap();
 
 
     private void setAddress(PublicKey address) {
@@ -24,6 +27,13 @@ public class Wallet {
         this.SK = SK;
     }
 
+    public void setTotalInput(double input) {
+        this.totalInput += input;
+    }
+
+    public void setTotalOutput(double output) {
+        this.totalOutput += output;
+    }
 
     public void generateKeyPair(){
         KeyPair pair = GenSig.generateKeyPair();
@@ -43,6 +53,14 @@ public class Wallet {
         return this.balance;
     }
 
+    public void setBalance() {
+        double balance =  getTotalInput() - getTotalOutput();
+        if (balance >= 0) {
+         this.balance = balance;
+        }
+    }
+
+
     @Override
     public String toString() {
         String output = "";
@@ -51,6 +69,19 @@ public class Wallet {
         output += " total output: " + getTotalOutput() + "\n";
         output += " Balance: " + getBalance() + "\n";
         return output;
+    }
+
+    public void loadCoins(BlockChain blockChain) {
+        for (Transaction transaccion:blockChain.getBlockChain()) {
+            if (transaccion.getPkeySender().equals(getAddress())) {
+                setTotalOutput(transaccion.getPigCoins());
+            } else if (transaccion.getPkeyRecipient().equals(getAddress())) {
+                setTotalInput(transaccion.getPigCoins());
+            } else {
+                //ignore
+             }
+        }
+        setBalance();
     }
 
 }
