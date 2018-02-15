@@ -4,6 +4,8 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Wallet {
     private PublicKey address;
@@ -114,6 +116,39 @@ public class Wallet {
 
     public ArrayList<Transaction> getOutputTransactions() {
         return this.outputTransactions;
+    }
+
+    public boolean esTransaccionConsumida(String hash) {
+        return getOutputTransactions().contains(hash);
+    }
+
+    public  Map<String, Double> collectCoins(double pigCoins){
+        Map<String, Double> consumidas = new HashMap();
+
+        for (Transaction transaccion:getInputTransactions()) {
+            // no encontramos el hash de la transaccion actual en la lista de
+            // output transactions
+            if (!(esTransaccionConsumida(transaccion.getHash()))) {
+                if (getInputTransactions().contains(transaccion.getPigCoins())) {
+                   consumidas.put(transaccion.getHash(), transaccion.getPigCoins());
+                   return consumidas;
+                } else {
+                    
+
+                }
+            }
+        }
+        return consumidas;
+    }
+
+    public byte[] signTransaction(String message) {
+        return (byte[]) message.getBytes();
+    }
+
+    public void sendCoins(PublicKey address, double pigcoins, String message, BlockChain bChain){
+        Map<String, Double> consumedCoins = collectCoins(pigcoins);
+        byte[] messageSignature = signTransaction(message);
+        bChain.processTransactions(getAddress(), address, consumedCoins, message, messageSignature);
     }
 
 }
