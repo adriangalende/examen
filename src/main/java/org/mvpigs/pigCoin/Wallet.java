@@ -3,7 +3,7 @@ package org.mvpigs.pigCoin;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.TreeMap;
+import java.util.ArrayList;
 
 public class Wallet {
     private PublicKey address;
@@ -11,8 +11,8 @@ public class Wallet {
     private double totalInput = 0.0d;
     private double totalOutput = 0.0d;
     private double balance = 0.0d;
-    private TreeMap<Integer, Transaction> loadInputTransactions = new TreeMap();
-    private TreeMap<Integer, Transaction> loadOutputTransactions = new TreeMap();
+    private ArrayList<Transaction> inputTransactions = new ArrayList();
+    private ArrayList<Transaction> outputTransactions = new ArrayList();
 
 
     private void setAddress(PublicKey address) {
@@ -82,6 +82,18 @@ public class Wallet {
              }
         }
         setBalance();
+    }
+
+    public void loadInputTransactions(BlockChain blockChain) {
+        for (Transaction transaccion:blockChain.getBlockChain()) {
+            if (transaccion.getPkeyRecipient().equals(getAddress())) {
+                inputTransactions.add(transaccion);
+            }
+        }   
+    }
+
+    public ArrayList<Transaction> getInputTransactions(){
+        return this.inputTransactions;
     }
 
 }
