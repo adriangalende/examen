@@ -3,6 +3,7 @@ package org.mvpigs.pigCoin;
 import java.security.PublicKey;
 import org.mvpigs.pigCoin.Transaction;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class BlockChain {
     private ArrayList<Transaction> blockChain = new ArrayList();
