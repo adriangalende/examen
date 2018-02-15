@@ -50,5 +50,17 @@ public class Transaction {
         return this.message;
     }
 
+    @Override
+    public String toString() {
+        String output = "";
+        output += "\n hash = " + getHash() + "\n";
+        output += "\n prev_hash = " + getPrevHash() + "\n";
+        output += "\n pKey_Sender = " + getPkeySender().hashCode() + "\n";
+        output += "\n pKey_recipient = " + getPkeyRecipient().hashCode() + "\n";
+        output += "\n pigcoins = " + getPigCoins() + "\n";
+        output += "\n message = " + getMessage() + "\n";
+        return output;
+    }
+
 
 }
