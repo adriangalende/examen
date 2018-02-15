@@ -1,5 +1,7 @@
 package org.mvpigs.pigcoin;
 
+import org.mvpigs.pigCoin.*;
+
 import java.security.KeyPair;
 import java.util.Map;
 

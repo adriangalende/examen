@@ -92,6 +92,31 @@ public class WalletTest{
         System.out.println("Transacciones = " + wallet_1.getInputTransactions().toString());
     }
 
+    @Test
+    public void testLoadOutputTransactions() {
+ 
+        Wallet origin = new Wallet();
+        origin.generateKeyPair();
+
+        BlockChain bChain = new BlockChain();
+
+        Transaction trx = new Transaction("hash_1", "0", origin.getAddress(), wallet_1.getAddress(), 20, "bacon eggs");
+        bChain.addOrigin(trx);
+        trx = new Transaction("hash_2", "1", origin.getAddress(), wallet_2.getAddress(), 10, "spam spam spam");
+        bChain.addOrigin(trx);
+        trx = new Transaction("hash_3", "hash_1", wallet_1.getAddress(), wallet_2.getAddress(), 20, "a flying pig!");
+        bChain.addOrigin(trx); 
+        
+        wallet_1.loadOutputTransactions(bChain);
+        wallet_2.loadOutputTransactions(bChain);
+        
+        System.out.println("Wallet = " + wallet_1.getAddress().hashCode());
+        System.out.println("Transacciones = " + wallet_1.getOutputTransactions().toString());
+
+        System.out.println("Wallet = " + wallet_2.getAddress().hashCode());
+        System.out.println("Transacciones = " + wallet_2.getOutputTransactions().toString());
+    }
+
 
 
 

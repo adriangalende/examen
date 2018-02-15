@@ -15,7 +15,7 @@ public class Wallet {
     private ArrayList<Transaction> outputTransactions = new ArrayList();
 
 
-    private void setAddress(PublicKey address) {
+    public void setAddress(PublicKey address) {
         this.address = address;
     }
 
@@ -23,8 +23,12 @@ public class Wallet {
         return this.address;
     }
 
-    private void setSK(PrivateKey SK) {
+    public void setSK(PrivateKey SK) {
         this.SK = SK;
+    }
+
+    public PrivateKey getSK(){
+        return this.SK;
     }
 
     public void setTotalInput(double input) {
@@ -94,6 +98,22 @@ public class Wallet {
 
     public ArrayList<Transaction> getInputTransactions(){
         return this.inputTransactions;
+    }
+
+    public void loadOutputTransactions(BlockChain blockChain){
+        for (Transaction transaccion:blockChain.getBlockChain()) {
+            if ((transaccion.getPkeySender().equals(getAddress()))
+                    && !(outputTransactions.contains(transaccion.getHash()))) {
+                outputTransactions.add(transaccion);
+            } else {
+                System.out.println("Ya existe una transacción de salida con la id " 
+                + transaccion.getHash());
+            }
+        }   
+    }
+
+    public ArrayList<Transaction> getOutputTransactions() {
+        return this.outputTransactions;
     }
 
 }
