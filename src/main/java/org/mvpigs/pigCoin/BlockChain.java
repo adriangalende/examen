@@ -14,4 +14,12 @@ public class BlockChain {
         blockChain.add(trx);
     }
 
+    public void summarize() {
+        for (Transaction transaccion:getBlockChain()) {
+            System.out.println(transaccion.toString());
+            System.out.println("");
+            System.out.println("");
+        }
+    }
+
 }
