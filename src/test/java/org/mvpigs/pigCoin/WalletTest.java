@@ -9,9 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class WalletTest{
+    Wallet wallet;
     @Before
     public void SetUp() {
-
+        wallet = new Wallet();
     }
 
     @Test
@@ -24,7 +25,17 @@ public class WalletTest{
         wallet.setAddress(pair.getPublic());
 
        assertEquals(pair.getPublic(), wallet.getAddress());
+
     }
+
+    @Test
+    public void testGenerateKeyPair() {
+        wallet.generateKeyPair();
+        System.out.println(wallet.getAddress().hashCode());
+    }
+
+    
+
 
 
 }
