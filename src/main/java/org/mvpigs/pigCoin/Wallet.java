@@ -31,4 +31,9 @@ public class Wallet {
         setSK(pair.getPrivate());
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(getAddress().hashCode());
+    }
+
 }

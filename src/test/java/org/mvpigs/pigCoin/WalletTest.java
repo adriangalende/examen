@@ -34,7 +34,18 @@ public class WalletTest{
         System.out.println(wallet.getAddress().hashCode());
     }
 
-    
+    @Test
+    public void testWalletToString() {
+        wallet.generateKeyPair();
+        Wallet wallet2 = new Wallet();
+        wallet2.generateKeyPair();
+
+        System.out.println("Dirección de la wallet_1 :" + wallet.toString());
+        System.out.println("Dirección de la wallet_2 :" + wallet2.toString());
+
+    }
+
+
 
 
 
