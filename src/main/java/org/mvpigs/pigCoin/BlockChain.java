@@ -22,4 +22,8 @@ public class BlockChain {
         }
     }
 
+    public void summarize(int posicion) {
+        System.out.println(getBlockChain().get(posicion).toString());
+    }
+
 }
