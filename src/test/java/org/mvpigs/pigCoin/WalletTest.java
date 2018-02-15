@@ -40,8 +40,8 @@ public class WalletTest{
         Wallet wallet2 = new Wallet();
         wallet2.generateKeyPair();
 
-        System.out.println("Dirección de la wallet_1 :" + wallet.toString());
-        System.out.println("Dirección de la wallet_2 :" + wallet2.toString());
+        System.out.println("wallet_1 :" + wallet.toString());
+        System.out.println("wallet_2 :" + wallet2.toString());
 
     }
 
