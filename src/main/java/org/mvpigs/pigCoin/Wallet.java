@@ -3,6 +3,7 @@ package org.mvpigs.pigCoin;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Signature;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -165,7 +166,7 @@ public class Wallet {
     }
 
     public byte[] signTransaction(String message) {
-        return (byte[]) message.getBytes();
+        return GenSig.sign(getSK(), message);
     }
 
     public void sendCoins(PublicKey address, double pigcoins, String message, BlockChain bChain){

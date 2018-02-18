@@ -136,7 +136,12 @@ public class WalletTest{
         System.out.println("Pigcoins enviados a la wallet_2 y transacciones consumidas: " + consumedCoins);
     }
 
-
+    @Test
+    public void testSignedTransaction() {
+        String message = "he roto la hucha :(";
+        byte[] signedTransaction = wallet_1.signTransaction(message);
+        assertEquals(true, GenSig.verify(wallet_1.getAddress(), message, signedTransaction));
+    }
 
 
 
