@@ -1,11 +1,11 @@
-package org.mvpigs.pigcoin;
+package org.mvpigs.pigCoin;
 
 import org.mvpigs.pigCoin.*;
 
 import java.security.KeyPair;
 import java.util.Map;
 
-public class App {
+public class AppAdrianGalende {
 
     public static void main( String[] args )
     {
@@ -214,10 +214,10 @@ public class App {
          * Debes firmar el mensaje con tu clave privada.
          */
         
-        String message = "he roto la hucha :(";
+/*        String message = "he roto la hucha :(";
         byte[] signedTransaction = wallet_1.signTransaction(message); // usa GenSig.sign()
         wallet_1.sendCoins(wallet_2.getAddress(), pigcoins, message, bChain); // usa wallet.collectCoins() y bChain.processTransactions()
-        
+*/        
         /**
          *  wallet.sendCoins() invoca a 
          *  bChain.processTransactions(wallet_1.getAddress(), wallet_2.getAddress(), consumedCoins, message, signedTransaction);
@@ -248,7 +248,7 @@ public class App {
          * bChain.createTransaction(pKey_sender, pKey_recipient, consumedCoins,message, signedTransaction);
          */
 
-        System.out.println("\n" + "Ver el total de pigcoins de las dos wallet" + "\n" + 
+ /*       System.out.println("\n" + "Ver el total de pigcoins de las dos wallet" + "\n" + 
                                   "=========================================="            );
         // comprobamos que la transaccion se ha realizado
         wallet_1.loadCoins(bChain);
@@ -296,5 +296,6 @@ public class App {
         wallet_2.loadInputTransactions(bChain);
         wallet_2.loadOutputTransactions(bChain);
         System.out.println(wallet_2.toString());
+*/
     }
 }

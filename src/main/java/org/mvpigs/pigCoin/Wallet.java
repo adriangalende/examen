@@ -6,6 +6,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Wallet {
     private PublicKey address;
@@ -104,12 +105,8 @@ public class Wallet {
 
     public void loadOutputTransactions(BlockChain blockChain){
         for (Transaction transaccion:blockChain.getBlockChain()) {
-            if ((transaccion.getPkeySender().equals(getAddress()))
-                    && !(outputTransactions.contains(transaccion.getHash()))) {
+            if ((transaccion.getPkeySender().equals(getAddress()))){
                 outputTransactions.add(transaccion);
-            } else {
-                System.out.println("Ya existe una transacción de salida con la id " 
-                + transaccion.getHash());
             }
         }   
     }
@@ -122,23 +119,49 @@ public class Wallet {
         return getOutputTransactions().contains(hash);
     }
 
-    public  Map<String, Double> collectCoins(double pigCoins){
-        Map<String, Double> consumidas = new HashMap();
+    private Map<String, Double> getTransaccionesConsumidas() {
+        Map<String, Double> transaccionesConsumidas = new HashMap();
 
         for (Transaction transaccion:getInputTransactions()) {
             // no encontramos el hash de la transaccion actual en la lista de
             // output transactions
-            if (!(esTransaccionConsumida(transaccion.getHash()))) {
-                if (getInputTransactions().contains(transaccion.getPigCoins())) {
-                   consumidas.put(transaccion.getHash(), transaccion.getPigCoins());
-                   return consumidas;
-                } else {
-                    
-
-                }
+            if (esTransaccionConsumida(transaccion.getHash())) {
+                transaccionesConsumidas.put(transaccion.getHash(), transaccion.getPigCoins());
             }
         }
-        return consumidas;
+        return transaccionesConsumidas;
+    }
+    
+    public  Map<String, Double> collectCoins(double pigCoins){
+
+        Map<String, Double> transaccionesConsumidas = getTransaccionesConsumidas();
+        Map<String, Double> transaccionesDisponibles = new TreeMap();
+
+
+        if (getBalance() >= pigCoins) {
+            int i = 0;
+            while (pigCoins > 0) {
+                Transaction transaccion = getInputTransactions().get(i);
+                if (!(transaccionesConsumidas.containsKey(transaccion.getHash()))) {
+                    if (pigCoins == transaccion.getPigCoins()) {
+                        transaccionesDisponibles.put(transaccion.getHash(), transaccion.getPigCoins());    
+                        pigCoins = 0;
+                    } else if (pigCoins < transaccion.getPigCoins()) {
+                        transaccionesDisponibles.put(transaccion.getHash(), pigCoins);
+                        //CHANGE ADDRESS
+                        double cambio = transaccion.getPigCoins() - pigCoins;
+                        transaccionesDisponibles.put("CA_" + transaccion.getHash(), cambio);
+                        pigCoins = 0;
+                    } else {
+                        transaccionesDisponibles.put(transaccion.getHash(), transaccion.getPigCoins());
+                        pigCoins -= transaccion.getPigCoins();
+                    }
+                }
+                i++;
+            }
+        }
+
+        return transaccionesDisponibles;
     }
 
     public byte[] signTransaction(String message) {
