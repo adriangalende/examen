@@ -82,7 +82,8 @@ public class Wallet {
         double totalOut = 0.0d;
         for (Transaction transaccion : blockChain.getBlockChain()) {
             //Si el emisor = receptor => CHANGE ADDRESS
-            if(transaccion.getPkeySender().equals(transaccion.getPkeyRecipient())) {
+            if (transaccion.getPkeySender().equals(transaccion.getPkeyRecipient())
+                    && transaccion.getPkeySender().equals(getAddress())) {
                 totalIn += transaccion.getPigCoins();
                 totalOut += transaccion.getPigCoins();
             } else if (transaccion.getPkeyRecipient().equals(getAddress())) {
