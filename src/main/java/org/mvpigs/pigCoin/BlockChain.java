@@ -33,17 +33,28 @@ public class BlockChain {
     }
 
     public boolean isConsumedCoinValid(Map<String,Double> consumedCoins) {
-        for (Transaction transaccion:consumedCoins){
-            if(blockChain.contains(transaccion.getHash())){
-                return true;
-            } 
+        for (Map.Entry<String, Double> consumedCoin : consumedCoins.entrySet()) {
+            if (getBlockChain().contains(consumedCoin.getKey())) {
+                return false;
+            }
         }
-        return false;
+        return true;
     }
 
     public void processTransactions(PublicKey sender, PublicKey recipient, Map <String,Double> consumedCoins, String message, byte[] messageSigned) {
         if(isSignatureValid(sender, message, messageSigned) && isConsumedCoinValid(consumedCoins)){
             createTransaction(sender, recipient, consumedCoins,message, messageSigned);
+        }
+        
+    }
+
+    private void createTransaction(PublicKey sender, PublicKey recipient, Map <String,Double> consumedCoins, String message, byte[] messageSigned){
+        for (Map.Entry<String, Double> consumedCoin : consumedCoins.entrySet()) {
+            String hash = "hash_" + (getBlockChain().size() + 1);
+            PublicKey receptor = (consumedCoin.getKey().split("_")[0].equals("CA")) ? sender : recipient;
+            Transaction transaccion = new Transaction( hash, consumedCoin.getKey(), sender, receptor, consumedCoin.getValue(),
+                message);
+            addOrigin(transaccion);
         }
         
     }

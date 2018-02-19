@@ -53,7 +53,7 @@ public class AppAdrianGalende {
         System.out.println("\n" + "Ver transaccion" + "\n" +
                                   "==============="        );
 
-        Transaction trx = new Transaction();
+         Transaction trx = new Transaction();
         trx = new Transaction("hash_1", "0", wallet_1.getAddress(), wallet_2.getAddress(), 20, "a flying pig!");
         
         System.out.println(trx.toString());
@@ -214,10 +214,10 @@ public class AppAdrianGalende {
          * Debes firmar el mensaje con tu clave privada.
          */
         
-/*        String message = "he roto la hucha :(";
+        String message = "he roto la hucha :(";
         byte[] signedTransaction = wallet_1.signTransaction(message); // usa GenSig.sign()
         wallet_1.sendCoins(wallet_2.getAddress(), pigcoins, message, bChain); // usa wallet.collectCoins() y bChain.processTransactions()
-*/        
+       
         /**
          *  wallet.sendCoins() invoca a 
          *  bChain.processTransactions(wallet_1.getAddress(), wallet_2.getAddress(), consumedCoins, message, signedTransaction);
@@ -248,7 +248,7 @@ public class AppAdrianGalende {
          * bChain.createTransaction(pKey_sender, pKey_recipient, consumedCoins,message, signedTransaction);
          */
 
- /*       System.out.println("\n" + "Ver el total de pigcoins de las dos wallet" + "\n" + 
+        System.out.println("\n" + "Ver el total de pigcoins de las dos wallet" + "\n" + 
                                   "=========================================="            );
         // comprobamos que la transaccion se ha realizado
         wallet_1.loadCoins(bChain);
@@ -296,6 +296,5 @@ public class AppAdrianGalende {
         wallet_2.loadInputTransactions(bChain);
         wallet_2.loadOutputTransactions(bChain);
         System.out.println(wallet_2.toString());
-*/
     }
 }

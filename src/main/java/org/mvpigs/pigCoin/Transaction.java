@@ -7,7 +7,7 @@ public class Transaction {
     private String prevHash = "";
     private PublicKey pKeySender = null;
     private PublicKey pKeyRecipient = null;
-    private int pigCoins = 0;
+    private double pigCoins = 0.0d;
     private String message = "";
     private byte[] signature;
 
@@ -15,7 +15,7 @@ public class Transaction {
 
     }
 
-    public Transaction(String hash, String prevHash, PublicKey pKeySender, PublicKey pKeyRecipient, int pigCoins,
+    public Transaction(String hash, String prevHash, PublicKey pKeySender, PublicKey pKeyRecipient, double pigCoins,
             String message) {
 
                 this.hash = hash;

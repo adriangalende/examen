@@ -121,15 +121,21 @@ public class WalletTest{
         Wallet origin = new Wallet();
         origin.generateKeyPair();
 
-        Transaction trx = new Transaction("hash_4", "2", origin.getAddress(), wallet_1.getAddress(), 20, "sausages puagh!");
+        Transaction trx = new Transaction();
+        
+        trx = new Transaction("hash_1", "0", origin.getAddress(), wallet_1.getAddress(), 20, "bacon eggs");
+        bChain.addOrigin(trx);
+        trx = new Transaction("hash_2", "1", origin.getAddress(), wallet_2.getAddress(), 10, "spam spam spam");
+        bChain.addOrigin(trx);
+        trx = new Transaction("hash_3", "hash_1", wallet_1.getAddress(), wallet_2.getAddress(), 20, "a flying pig!");
+        bChain.addOrigin(trx);
+        trx = new Transaction("hash_4", "2", origin.getAddress(), wallet_1.getAddress(), 20, "sausages puagh!");
         bChain.addOrigin(trx);
         trx = new Transaction("hash_5", "3", origin.getAddress(), wallet_1.getAddress(), 10, "baked beans are off!");
         bChain.addOrigin(trx);
 
         wallet_1.loadInputTransactions(bChain);
         wallet_1.loadOutputTransactions(bChain);
-
-        wallet_1.loadCoins(bChain);
 
         Double pigcoins = 25d;
         Map<String, Double> consumedCoins = wallet_1.collectCoins(pigcoins);

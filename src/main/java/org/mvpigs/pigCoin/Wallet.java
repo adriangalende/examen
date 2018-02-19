@@ -15,9 +15,8 @@ public class Wallet {
     private double totalInput = 0.0d;
     private double totalOutput = 0.0d;
     private double balance = 0.0d;
-    private ArrayList<Transaction> inputTransactions = new ArrayList();
-    private ArrayList<Transaction> outputTransactions = new ArrayList();
-
+    private ArrayList<Transaction> inputTransactions;
+    private ArrayList<Transaction> outputTransactions;
 
     public void setAddress(PublicKey address) {
         this.address = address;
@@ -31,19 +30,19 @@ public class Wallet {
         this.SK = SK;
     }
 
-    public PrivateKey getSK(){
+    public PrivateKey getSK() {
         return this.SK;
     }
 
     public void setTotalInput(double input) {
-        this.totalInput += input;
+        this.totalInput = input;
     }
 
     public void setTotalOutput(double output) {
-        this.totalOutput += output;
+        this.totalOutput = output;
     }
 
-    public void generateKeyPair(){
+    public void generateKeyPair() {
         KeyPair pair = GenSig.generateKeyPair();
         setAddress(pair.getPublic());
         setSK(pair.getPrivate());
@@ -62,12 +61,11 @@ public class Wallet {
     }
 
     public void setBalance() {
-        double balance =  getTotalInput() - getTotalOutput();
+        double balance = getTotalInput() - getTotalOutput();
         if (balance >= 0) {
-         this.balance = balance;
+            this.balance = balance;
         }
     }
-
 
     @Override
     public String toString() {
@@ -80,36 +78,45 @@ public class Wallet {
     }
 
     public void loadCoins(BlockChain blockChain) {
-        for (Transaction transaccion:blockChain.getBlockChain()) {
-            if (transaccion.getPkeySender().equals(getAddress())) {
-                setTotalOutput(transaccion.getPigCoins());
+        double totalIn = 0.0d;
+        double totalOut = 0.0d;
+        for (Transaction transaccion : blockChain.getBlockChain()) {
+            //Si el emisor = receptor => CHANGE ADDRESS
+            if(transaccion.getPkeySender().equals(transaccion.getPkeyRecipient())) {
+                totalIn += transaccion.getPigCoins();
+                totalOut += transaccion.getPigCoins();
             } else if (transaccion.getPkeyRecipient().equals(getAddress())) {
-                setTotalInput(transaccion.getPigCoins());
+                totalIn += transaccion.getPigCoins();
+            } else if (transaccion.getPkeySender().equals(getAddress())) {
+                totalOut += transaccion.getPigCoins();
             } else {
-                //ignore
-             }
+                /*pass*/}
         }
+        setTotalOutput(totalOut);
+        setTotalInput(totalIn);
         setBalance();
     }
 
     public void loadInputTransactions(BlockChain blockChain) {
-        for (Transaction transaccion:blockChain.getBlockChain()) {
+        inputTransactions = new ArrayList();
+        for (Transaction transaccion : blockChain.getBlockChain()) {
             if (transaccion.getPkeyRecipient().equals(getAddress())) {
                 inputTransactions.add(transaccion);
             }
-        }   
+        }
     }
 
-    public ArrayList<Transaction> getInputTransactions(){
+    public ArrayList<Transaction> getInputTransactions() {
         return this.inputTransactions;
     }
 
-    public void loadOutputTransactions(BlockChain blockChain){
-        for (Transaction transaccion:blockChain.getBlockChain()) {
-            if ((transaccion.getPkeySender().equals(getAddress()))){
+    public void loadOutputTransactions(BlockChain blockChain) {
+        outputTransactions = new ArrayList();
+        for (Transaction transaccion : blockChain.getBlockChain()) {
+            if (transaccion.getPkeySender().equals(getAddress())) {
                 outputTransactions.add(transaccion);
             }
-        }   
+        }
     }
 
     public ArrayList<Transaction> getOutputTransactions() {
@@ -117,13 +124,18 @@ public class Wallet {
     }
 
     public boolean esTransaccionConsumida(String hash) {
-        return getOutputTransactions().contains(hash);
+        for (Transaction transaccion : getOutputTransactions()) {
+            if (transaccion.getPrevHash().equals(hash)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Map<String, Double> getTransaccionesConsumidas() {
-        Map<String, Double> transaccionesConsumidas = new HashMap();
+        Map<String, Double> transaccionesConsumidas = new TreeMap();
 
-        for (Transaction transaccion:getInputTransactions()) {
+        for (Transaction transaccion : getInputTransactions()) {
             // no encontramos el hash de la transaccion actual en la lista de
             // output transactions
             if (esTransaccionConsumida(transaccion.getHash())) {
@@ -132,20 +144,19 @@ public class Wallet {
         }
         return transaccionesConsumidas;
     }
-    
-    public  Map<String, Double> collectCoins(double pigCoins){
+
+    public Map<String, Double> collectCoins(double pigCoins) {
 
         Map<String, Double> transaccionesConsumidas = getTransaccionesConsumidas();
         Map<String, Double> transaccionesDisponibles = new TreeMap();
-
-
+        Transaction transaccion;
         if (getBalance() >= pigCoins) {
             int i = 0;
             while (pigCoins > 0) {
-                Transaction transaccion = getInputTransactions().get(i);
+                transaccion = getInputTransactions().get(i);
                 if (!(transaccionesConsumidas.containsKey(transaccion.getHash()))) {
                     if (pigCoins == transaccion.getPigCoins()) {
-                        transaccionesDisponibles.put(transaccion.getHash(), transaccion.getPigCoins());    
+                        transaccionesDisponibles.put(transaccion.getHash(), transaccion.getPigCoins());
                         pigCoins = 0;
                     } else if (pigCoins < transaccion.getPigCoins()) {
                         transaccionesDisponibles.put(transaccion.getHash(), pigCoins);
@@ -169,7 +180,7 @@ public class Wallet {
         return GenSig.sign(getSK(), message);
     }
 
-    public void sendCoins(PublicKey address, double pigcoins, String message, BlockChain bChain){
+    public void sendCoins(PublicKey address, double pigcoins, String message, BlockChain bChain) {
         Map<String, Double> consumedCoins = collectCoins(pigcoins);
         byte[] messageSignature = signTransaction(message);
         bChain.processTransactions(getAddress(), address, consumedCoins, message, messageSignature);
