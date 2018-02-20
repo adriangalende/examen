@@ -85,4 +85,24 @@ public class BlockChain {
         
     }
 
+    public ArrayList<Transaction> loadInputTransactions(PublicKey address) {
+        ArrayList<Transaction> inputTransactions = new ArrayList();
+        for (Transaction transaccion : getBlockChain()) {
+            if (transaccion.getPkeyRecipient().equals(address)) {
+                inputTransactions.add(transaccion);
+            }
+        }
+        return inputTransactions;
+    }
+
+    public ArrayList<Transaction> loadOutputTransactions(PublicKey address) {
+        ArrayList<Transaction> outputTransactions = new ArrayList();
+        for (Transaction transaccion : getBlockChain()) {
+            if (transaccion.getPkeySender().equals(address)) {
+                outputTransactions.add(transaccion);
+            }
+        }
+        return outputTransactions;
+    }
+
 }

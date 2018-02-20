@@ -84,12 +84,12 @@ public class Wallet {
     }
 
     public void loadInputTransactions(BlockChain blockChain) {
-        inputTransactions = new ArrayList();
-        for (Transaction transaccion : blockChain.getBlockChain()) {
-            if (transaccion.getPkeyRecipient().equals(getAddress())) {
-                inputTransactions.add(transaccion);
-            }
-        }
+        setInputTransactions(blockChain.loadInputTransactions(getAddress()));   
+    }
+
+    public void setInputTransactions(ArrayList<Transaction> inputTransactions){
+        this.inputTransactions = new ArrayList();
+        this.inputTransactions = inputTransactions;
     }
 
     public ArrayList<Transaction> getInputTransactions() {
@@ -97,12 +97,12 @@ public class Wallet {
     }
 
     public void loadOutputTransactions(BlockChain blockChain) {
-        outputTransactions = new ArrayList();
-        for (Transaction transaccion : blockChain.getBlockChain()) {
-            if (transaccion.getPkeySender().equals(getAddress())) {
-                outputTransactions.add(transaccion);
-            }
-        }
+        setOutputTransactions(blockChain.loadOutputTransactions(getAddress()));   
+    }
+
+    public void setOutputTransactions(ArrayList<Transaction> outputTransaction) {
+        this.outputTransactions = new ArrayList();
+        this.outputTransactions = outputTransaction;
     }
 
     public ArrayList<Transaction> getOutputTransactions() {
