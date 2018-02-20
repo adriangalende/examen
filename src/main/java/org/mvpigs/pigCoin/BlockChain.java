@@ -1,6 +1,7 @@
 package org.mvpigs.pigCoin;
 
 import java.security.PublicKey;
+import java.util.TreeMap;
 import org.mvpigs.pigCoin.Transaction;
 import java.util.ArrayList;
 import java.util.Map;
@@ -34,8 +35,10 @@ public class BlockChain {
 
     public boolean isConsumedCoinValid(Map<String,Double> consumedCoins) {
         for (Map.Entry<String, Double> consumedCoin : consumedCoins.entrySet()) {
-            if (getBlockChain().contains(consumedCoin.getKey())) {
-                return false;
+            for(Transaction transaccion:getBlockChain()) {
+                if (transaccion.getPrevHash() == consumedCoin.getKey()) {
+                    return false;
+                }
             }
         }
         return true;
@@ -56,6 +59,29 @@ public class BlockChain {
                 message);
             addOrigin(transaccion);
         }
+        
+    }
+
+    public Map<String, Double> loadWallet(PublicKey address) {
+        double totalIn = 0.0d;
+        double totalOut = 0.0d;
+        Map<String, Double> walletBalance = new TreeMap();
+        for (Transaction transaccion : getBlockChain()) {
+            //Si el emisor = receptor => CHANGE ADDRESS
+            if (transaccion.getPkeySender().equals(transaccion.getPkeyRecipient())
+                    && transaccion.getPkeySender().equals(address)) {
+                totalIn += transaccion.getPigCoins();
+                totalOut += transaccion.getPigCoins();
+            } else if (transaccion.getPkeyRecipient().equals(address)) {
+                totalIn += transaccion.getPigCoins();
+            } else if (transaccion.getPkeySender().equals(address)) {
+                totalOut += transaccion.getPigCoins();
+            } else {
+                /*pass*/}
+        }
+        walletBalance.put("totalInput", totalIn);
+        walletBalance.put("totalOutput", totalOut);
+        return walletBalance;
         
     }
 

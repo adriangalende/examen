@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
+import org.omg.CORBA.ByteHolder;
 
 public class BlockChainTest {
     BlockChain bChain;
@@ -94,11 +95,36 @@ public class BlockChainTest {
         trx = new Transaction("hash_2", "1", origin.getAddress(), wallet_2.getAddress(), 10, "spam spam spam");
         bChain.addOrigin(trx);
         trx = new Transaction("hash_3", "hash_1", wallet_1.getAddress(), wallet_2.getAddress(), 20, "a flying pig!");
-        bChain.addOrigin(trx);    
+        bChain.addOrigin(trx); 
+
+
+        wallet_1.loadCoins(bChain);
+        wallet_1.loadInputTransactions(bChain);
+        wallet_1.loadOutputTransactions(bChain);
 
         Double pigcoins = 25d;
         Map<String, Double> consumedCoins = wallet_1.collectCoins(pigcoins);
         assertEquals(true, bChain.isConsumedCoinValid(consumedCoins));
+
+    }
+
+    @Test
+    public void testLoadWallet() {
+        Wallet wallet_1 = new Wallet();
+        wallet_1.generateKeyPair();
+
+        Wallet wallet_2 = new Wallet();
+        wallet_2.generateKeyPair();
+
+        Transaction trx = new Transaction("hash_1", "0", origin.getAddress(), wallet_1.getAddress(), 20, "bacon eggs");
+        bChain.addOrigin(trx);
+        trx = new Transaction("hash_2", "1", origin.getAddress(), wallet_2.getAddress(), 10, "spam spam spam");
+        bChain.addOrigin(trx);
+        trx = new Transaction("hash_3", "hash_1", wallet_1.getAddress(), wallet_2.getAddress(), 20, "a flying pig!");
+        bChain.addOrigin(trx); 
+        wallet_1.loadCoins(bChain);
+        assertEquals(20.0, bChain.loadWallet(wallet_1.getAddress()).get("totalInput"), 0.01);
+        assertEquals( wallet_1.getTotalInput(), bChain.loadWallet(wallet_1.getAddress()).get("totalInput"), 0.01);
 
     }
 }

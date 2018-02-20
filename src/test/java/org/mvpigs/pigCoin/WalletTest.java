@@ -55,7 +55,6 @@ public class WalletTest{
     @Test
     public void testCargarPigCoins() {
 
-
         Wallet origin = new Wallet();
         origin.generateKeyPair();
 
