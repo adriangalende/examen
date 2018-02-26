@@ -88,8 +88,9 @@ public class WalletTest{
         
         wallet_1.loadInputTransactions(bChain);
         
-        System.out.println("Wallet = " + wallet_1.getAddress().hashCode());
-        System.out.println("Transacciones = " + wallet_1.getInputTransactions().toString());
+        for (Transaction transaccion:wallet_1.getInputTransactions()){
+            assertEquals("hash_1", transaccion.getHash());
+        }
     }
 
     @Test
@@ -135,10 +136,23 @@ public class WalletTest{
 
         wallet_1.loadInputTransactions(bChain);
         wallet_1.loadOutputTransactions(bChain);
-
+        wallet_1.loadCoins(bChain);
+        
         Double pigcoins = 25d;
+        
         Map<String, Double> consumedCoins = wallet_1.collectCoins(pigcoins);
-        System.out.println("Pigcoins enviados a la wallet_2 y transacciones consumidas: " + consumedCoins);
+
+        double sumaConsumedCoins = 0.0d;
+
+        for (Map.Entry<String, Double> consumedCoin : consumedCoins.entrySet()) {
+            if (!(consumedCoin.getKey().contains("CA_"))) {
+                System.out.println(consumedCoin);
+                sumaConsumedCoins += consumedCoin.getValue();
+            }
+
+        }
+        assertEquals(pigcoins, sumaConsumedCoins, 0.01);
+
     }
 
     @Test

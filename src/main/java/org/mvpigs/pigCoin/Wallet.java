@@ -60,7 +60,11 @@ public class Wallet {
         return this.balance;
     }
 
-    public void setBalance() {
+    public void setBalance(){
+        updateBalance();
+    }
+
+    public void updateBalance() {
         double balance = getTotalInput() - getTotalOutput();
         if (balance >= 0) {
             this.balance = balance;

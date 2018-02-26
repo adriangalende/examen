@@ -1,10 +1,11 @@
 package org.mvpigs.pigCoin;
 
 import java.security.PublicKey;
-import java.util.TreeMap;
+import java.util.*;
 import org.mvpigs.pigCoin.Transaction;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BlockChain {
     private ArrayList<Transaction> blockChain = new ArrayList();
@@ -86,22 +87,17 @@ public class BlockChain {
     }
 
     public ArrayList<Transaction> loadInputTransactions(PublicKey address) {
-        ArrayList<Transaction> inputTransactions = new ArrayList();
-        for (Transaction transaccion : getBlockChain()) {
-            if (transaccion.getPkeyRecipient().equals(address)) {
-                inputTransactions.add(transaccion);
-            }
-        }
+        ArrayList<Transaction> inputTransactions = getBlockChain().stream().
+        filter(transaccion -> transaccion.getPkeyRecipient().equals(address)).
+        collect(Collectors.toCollection(ArrayList<Transaction>::new));
+
         return inputTransactions;
     }
 
     public ArrayList<Transaction> loadOutputTransactions(PublicKey address) {
-        ArrayList<Transaction> outputTransactions = new ArrayList();
-        for (Transaction transaccion : getBlockChain()) {
-            if (transaccion.getPkeySender().equals(address)) {
-                outputTransactions.add(transaccion);
-            }
-        }
+        ArrayList<Transaction> outputTransactions = getBlockChain().stream().
+        filter(transaccion -> transaccion.getPkeySender().equals(address)).
+        collect(Collectors.toCollection(ArrayList<Transaction>::new));
         return outputTransactions;
     }
 

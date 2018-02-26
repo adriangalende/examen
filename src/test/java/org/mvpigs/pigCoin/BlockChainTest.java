@@ -38,9 +38,14 @@ public class BlockChainTest {
 
         Transaction trx = new Transaction("hash_1", "0", origin.getAddress(), wallet_1.getAddress(), 20, "bacon eggs");
         bChain.addOrigin(trx);
-
+        trx = new Transaction("hash_2", "0", origin.getAddress(), wallet_1.getAddress(), 20, "bacon eggs");
+        bChain.addOrigin(trx);
+        
+        int i=1;
         for (Transaction transaccion:bChain.getBlockChain()) {
-            System.out.println(transaccion.toString());
+            assertNotEquals(null, transaccion);
+            assertEquals("hash_"+i, transaccion.getHash());
+            i++;
         }
 
     }
