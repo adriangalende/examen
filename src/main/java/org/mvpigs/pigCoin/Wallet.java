@@ -82,8 +82,8 @@ public class Wallet {
     }
 
     public void loadCoins(BlockChain blockChain) {
-        setTotalOutput(blockChain.loadWallet(getAddress()).get("totalOutput"));
-        setTotalInput(blockChain.loadWallet(getAddress()).get("totalInput"));
+        setTotalOutput(blockChain.loadWallet(getAddress())[1]);
+        setTotalInput(blockChain.loadWallet(getAddress())[0]);
         setBalance();
     }
 

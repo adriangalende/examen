@@ -52,7 +52,7 @@ public class BlockChain {
         
     }
 
-    private void createTransaction(PublicKey sender, PublicKey recipient, Map <String,Double> consumedCoins, String message, byte[] messageSigned){
+    public void createTransaction(PublicKey sender, PublicKey recipient, Map <String,Double> consumedCoins, String message, byte[] messageSigned){
         for (Map.Entry<String, Double> consumedCoin : consumedCoins.entrySet()) {
             String hash = "hash_" + (getBlockChain().size() + 1);
             PublicKey receptor = (consumedCoin.getKey().split("_")[0].equals("CA")) ? sender : recipient;
@@ -63,10 +63,10 @@ public class BlockChain {
         
     }
 
-    public Map<String, Double> loadWallet(PublicKey address) {
+    public double[] loadWallet(PublicKey address) {
         double totalIn = 0.0d;
         double totalOut = 0.0d;
-        Map<String, Double> walletBalance = new TreeMap();
+        double[] walletBalance = {totalIn, totalOut};
         for (Transaction transaccion : getBlockChain()) {
             //Si el emisor = receptor => CHANGE ADDRESS
             if (transaccion.getPkeySender().equals(transaccion.getPkeyRecipient())
@@ -80,8 +80,8 @@ public class BlockChain {
             } else {
                 /*pass*/}
         }
-        walletBalance.put("totalInput", totalIn);
-        walletBalance.put("totalOutput", totalOut);
+        walletBalance[0] = totalIn;
+        walletBalance[1] = totalOut;
         return walletBalance;
         
     }

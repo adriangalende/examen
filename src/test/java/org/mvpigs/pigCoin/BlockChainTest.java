@@ -128,8 +128,8 @@ public class BlockChainTest {
         trx = new Transaction("hash_3", "hash_1", wallet_1.getAddress(), wallet_2.getAddress(), 20, "a flying pig!");
         bChain.addOrigin(trx); 
         wallet_1.loadCoins(bChain);
-        assertEquals(20.0, bChain.loadWallet(wallet_1.getAddress()).get("totalInput"), 0.01);
-        assertEquals( wallet_1.getTotalInput(), bChain.loadWallet(wallet_1.getAddress()).get("totalInput"), 0.01);
+        assertEquals(20.0, bChain.loadWallet(wallet_1.getAddress())[0], 0.01);
+        assertEquals( wallet_1.getTotalInput(), bChain.loadWallet(wallet_1.getAddress())[1], 0.01);
 
     }
 }
